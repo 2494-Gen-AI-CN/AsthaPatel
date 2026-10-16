@@ -73,7 +73,7 @@ def make_figure(candles, label, show_all):
             hoverformat='%b %-d, %Y · %I:%M %p', gridcolor='rgba(145,151,215,0.10)',
             tickfont=dict(size=11, color='#abb3d5'), zeroline=False,
         ),
-        yaxis=dict(title='Price', side='right', tickformat=',.2f',
+        yaxis=dict(title='Price (USD)', side='right', tickformat=',.2f',
                    gridcolor='rgba(145,151,215,0.10)', fixedrange=False,
                    tickfont=dict(size=11, color='#abb3d5'), zeroline=False),
     )
@@ -214,9 +214,9 @@ def main():
     setTimeout(fitChart,650);
     </script>'''
     components.html(chart_html.replace('</body>', resize_script+'</body>'), height=540, scrolling=False)
-    st.markdown(f'''<div class="footer"><span>{label.upper()} · {len(candles):,} CANDLES · 07 OCT 2026</span>
+    st.markdown(f'''<div class="footer"><span> Data: 07 OCT 2026</span>
       <span>Drag to pan · Scroll to zoom · Bottom navigator for earlier candles</span>
-      <span>Ticker prices simulated · EST · Source gap 4:15–5:59 PM</span></div>''', unsafe_allow_html=True)
+      <span>EST · Source gap 4:15–5:59 PM</span></div>''', unsafe_allow_html=True)
 
 
 # Real ticker symbols with simulated prices, independent of the NAS100 chart.
