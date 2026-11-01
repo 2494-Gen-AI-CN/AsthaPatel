@@ -179,7 +179,11 @@ LIMIT 5;
 
 -- Q19. How many tracks have never been sold? One number, found with a LEFT JOIN
 --      from Track to InvoiceLine and a test for NULL.
-
+SELECT COUNT(t.TrackId) AS 'Total sold tracks'
+FROM Track AS t 
+LEFT JOIN InvoiceLine AS i ON i.TrackId = t.TrackId 
+GROUP BY t.TrackId 
+HAVING ;
 
 -- ============================================================
 -- Part D: subqueries
@@ -187,25 +191,55 @@ LIMIT 5;
 
 -- Q20. Every track on the album called Let There Be Rock: name and length in milliseconds,
 --      in track order (by TrackId). Use a subquery for the album id, not a join.
+SELECT t.Name, t.Milliseconds
+FROM  Track AS t
+WHERE t.AlbumId = ALL(SELECT a.AlbumId
+                        FROM Album AS a
+                        WHERE a.Title = 'Let There Be Rock');
+-- OR JOIN
+SELECT t.Name, t.Milliseconds
+FROM Track AS t 
+INNER JOIN Album AS a ON a.AlbumId = t.AlbumId 
+WHERE a.Title = 'Let There Be Rock';
 
 
 -- Q21. Tracks that cost more than the average track price: name and unit price,
 --      the first ten alphabetically.
-
+SELECT t.Name, t.UnitPrice
+FROM Track AS t
+WHERE t.UnitPrice > (SELECT AVG(i.UnitPrice)
+                        FROM InvoiceLine AS i)
+ORDER BY t.Name ASC
+LIMIT 10;
 
 -- Q22. Artists with no album at all, A to Z. Write it with NOT IN and a subquery.
-
+SELECT ar.Name
+FROM Artist AS ar 
+WHERE ar.ArtistId NOT IN(SELECT al.ArtistId
+                                FROM Album AS al
+                                WHERE al.ArtistId IS NOT NULL) -- prevent NULL trap
+ORDER BY ar.Name ASC;
 
 -- Q22b. Same question, written as a LEFT JOIN. Same rows?
+SELECT ar.Name 
+FROM Artist AS ar 
+LEFT JOIN Album AS al ON al.ArtistId = ar.ArtistId 
+WHERE al.ArtistId IS NULL --The artist id in album will be null sicne they dont have an album
+ORDER BY ar.Name ASC;
 
 
 -- Q23. The invoice with the highest total: invoice id, customer id, date and total.
-
+SELECT i.InvoiceId, i.CustomerId, i.InvoiceDate, i.Total
+FROM Invoice AS i 
+WHERE i.Total = (SELECT MAX(Total)
+                        FROM Invoice);
 
 -- Q24. Customers who bought at least one Metal track: full name and country, sorted by
 --      name. The list of customer ids comes from a subquery that joins Invoice,
 --      InvoiceLine, Track and Genre.
-
+SELECT CONCAT(c.FirstName, ' ', c.LastName) AS 'Full Name', c.Country
+FROM Customer AS c 
+WHERE  
 
 -- ============================================================
 -- Stretch (for home, or if you finish early)
