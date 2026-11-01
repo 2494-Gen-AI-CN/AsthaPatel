@@ -10,8 +10,8 @@ df = pd.read_csv("NAS100_oct_7th_2026.csv")
 # define EST timezone
 EST = timezone(timedelta(hours=-5), name='EST')
 df['date'] = pd.to_datetime(df['date'], utc=True).dt.tz_convert(EST)
-# set 'date' as index and sort in ascending order for proper resampling
-df = df.set_index("date").sort_index() 
+# set 'date' as index
+df = df.set_index("date")
 
 # define timeframes
 TIMEFRAMES = {
@@ -255,3 +255,5 @@ render();setInterval(()=>{quotes.forEach(q=>q[1]*=1+(Math.random()-.5)*.001);ren
 
 if __name__ == '__main__':
     main()
+
+
